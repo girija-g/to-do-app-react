@@ -7,6 +7,8 @@ import "./TodoList.css"
 const TodoList = (props) => {
   const [list, setList] = useState([])
   const [showContent, setShowContent] = useState(undefined)
+  const [editing, setEditing] = useState(false)
+  const [title, setTitle] = useState("")
 
   const renderContent = (list, userName) => {
     return list.map((item) => (
@@ -56,21 +58,45 @@ const TodoList = (props) => {
       })
   }, [props.selectedBucket])
 
+  const updateBucket = () => {
+    db.collection("users")
+      .doc(props.userDetails.userName)
+      .collection("buckets")
+      .doc(props.selectedBucket.id)
+      .update({
+        bucketName: title
+      })
+
+    setEditing(false)
+  }
+
+  useEffect(() => {
+    setTitle(props?.selectedBucket?.name)
+  }, [props?.selectedBucket?.name])
+
   return (
     <div className="todolist">
-      <h2>{props?.selectedBucket?.name}</h2>
+      {editing ? (
+        <div>
+          <input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+          <i class="check icon big" onClick={() => updateBucket()}></i>
+        </div>
+      ) : (
+        <h2>{title}</h2>
+      )}
+
       <hr />
       <div className="todolist__header">
-        <button onClick={() => setShowContent("edit")}>
-          Edit Bucket Details
-        </button>
+        <button onClick={() => setEditing(true)}>Edit Bucket Details</button>
         <button onClick={() => deleteBucket()}>Delete Bucket</button>
       </div>
       <AddTodo
         id={props?.selectedBucket?.id}
         userName={props?.userDetails.userName}
       />
-      {showContent === "edit" ? <EditBucket /> : null}
       {list.length > 0 ? (
         renderContent(list, props.userDetails.userName)
       ) : (
@@ -171,10 +197,6 @@ const AddTodo = ({ id, userName }) => {
       </span>
     </div>
   )
-}
-
-const EditBucket = () => {
-  return <div>Edit Bucket</div>
 }
 
 const mapStateToProps = (state) => {

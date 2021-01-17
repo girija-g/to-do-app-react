@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react"
+import "./App.css"
+//import Sidebar from "./components/SideBar"
+import MainComponent from "./components/MainComponent"
+import Login from "./components/Login"
+import { connect } from "react-redux"
 
-function App() {
+const App = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {(props.userDetails && props.userDetails.userName) !== undefined ? (
+        <MainComponent />
+      ) : (
+        <Login />
+      )}
     </div>
-  );
+  )
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return { userDetails: state.userDetails }
+}
+
+export default connect(mapStateToProps)(App)

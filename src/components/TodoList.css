@@ -1,0 +1,24 @@
+.todolist {
+  background-color: #83c244;
+  margin-left: 30px;
+  height: 100vh;
+  flex: 0.25;
+}
+
+.todolist__header {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.todolist__header > button {
+  margin: 0px 8px;
+}
+
+.shareContent {
+  margin: 10px 10px;
+}
+
+.shareContent > span > button {
+  margin-left: 10px;
+}
